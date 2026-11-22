@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raja Sabari Theatre – Show Collection</title>
+<meta name="theme-color" content="#1b2a52">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hind+Madurai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8ecf2; --card:#ffffff; --ink:#15203b; --muted:#5b6784; --line:#cdd5e2;
+  --brand:#1b2a52; --brand-ink:#ffffff; --gold:#f0a500; --red:#a3122f; --field:#f2f5fa; --wa:#1d8f4e;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0e1424; --card:#172038; --ink:#eaeefa; --muted:#9aa7c7; --line:#2a3558; --brand:#0a1022; --field:#0f1730; --red:#ff8aa0; }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Madurai",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45;font-variant-numeric:tabular-nums;padding-bottom:84px}
+h1,h2{font-family:"Bricolage Grotesque","Hind Madurai",system-ui,sans-serif;margin:0}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+header{background:var(--brand);color:var(--brand-ink);padding:14px 16px 10px;display:flex;gap:12px;align-items:flex-end;justify-content:space-between;padding-top:max(14px,env(safe-area-inset-top))}
+header h1{font-size:22px;font-weight:800;line-height:1.1}
+header p{margin:2px 0 0;font-size:13px;opacity:.75}
+header label{display:block;font-size:12px;opacity:.75;margin-bottom:2px}
+header select{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:7px 8px;max-width:150px}
+header select option{color:#111}
+.marquee{height:12px;background:var(--brand) radial-gradient(circle at 8px 6px,var(--gold) 3px,transparent 3.6px) 0 0/16px 12px repeat-x}
+
+main{max-width:640px;margin:0 auto;padding:12px 14px}
+.card{background:var(--card);border-radius:12px;padding:14px;margin:14px 0;border:1px solid var(--line)}
+.card h2{font-size:18px;margin-bottom:8px}
+.empty{color:var(--muted);margin:6px 0}
+
+.datebar{display:flex;gap:8px;margin-top:6px}
+.datebar input{flex:1;min-width:0;text-align:center;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.nav{width:46px;border:1px solid var(--line);background:var(--card);border-radius:10px;font-size:24px;cursor:pointer}
+.run{margin:6px 2px 0;color:var(--muted);font-size:14px}
+
+.ticket{position:relative;background:var(--card);border-radius:12px;margin:16px 0;border:1px solid var(--line)}
+.thead{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.thead .lab{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:var(--muted);font-size:15px}
+.thead input[type=time]{flex:1;min-width:0;font-weight:600;font-size:18px;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.x{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:20px;cursor:pointer;color:var(--muted)}
+.perf{position:relative;border-top:2px dashed var(--line);margin:0 14px}
+.perf::before,.perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.perf::before{left:-25px}.perf::after{right:-25px}
+.tbody{padding:12px 14px 14px}
+.rrow{display:grid;grid-template-columns:78px 1fr 1fr;align-items:center;gap:10px;margin-bottom:10px}
+.rrow .rate{font-weight:600;font-size:17px}
+.rrow input{width:100%;font-size:20px;font-weight:600;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.rrow .eq{text-align:right;font-size:18px;color:var(--muted)}
+.rrow .eq b{color:var(--ink)}
+.tot{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:2px;font-size:17px}
+.tot b{color:var(--red);font-size:20px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{flex:1 1 140px;border:0;border-radius:10px;padding:11px 12px;font-weight:600;cursor:pointer;background:var(--brand);color:var(--brand-ink);text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.wa{background:var(--wa);color:#fff}
+.btn.gold{background:var(--gold);color:#1b1500}
+.btn.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.sum div{background:var(--field);border-radius:8px;padding:8px 4px}
+.sum small{display:block;color:var(--muted);font-size:12px}
+.sum b{font-size:17px}
+.note{background:var(--field);border-left:4px solid var(--gold);padding:8px 10px;border-radius:6px;font-size:14px;margin:10px 0}
+
+.receipt{background:var(--field);border:1px dashed var(--line);border-radius:8px;padding:12px;margin:0;white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;line-height:1.5}
+.preview{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff;display:block}
+
+.tblwrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{color:var(--muted);font-weight:600}
+.tbl tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--ink)}
+
+.stepper{display:flex;align-items:center;gap:10px;margin-top:6px}
+.stepper strong{flex:1;text-align:center;font-family:"Bricolage Grotesque",sans-serif;font-size:20px}
+
+.fld{display:block;margin:10px 0 0;font-size:14px;color:var(--muted)}
+.fld input{display:block;width:100%;margin-top:3px;font-size:17px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+.pair{display:grid;grid-template-columns:70px 1fr 1fr;gap:8px;align-items:end;margin-top:8px}
+.pair .nm{font-weight:600;padding-bottom:10px}
+.pair .fld{margin:0}
+
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;border:0;background:transparent;padding:14px 4px 12px;font-weight:600;color:var(--muted);cursor:pointer;border-top:4px solid transparent}
+nav button.on{color:var(--ink);border-top-color:var(--gold)}
+
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="title">Raja Sabari Theatre</h1>
+    <p id="sub">Show collection</p>
+  </div>
+  <div>
+    <label for="movieSel">Movie</label>
+    <select id="movieSel"></select>
+  </div>
+</header>
+<div class="marquee" aria-hidden="true"></div>
+<main id="view"></main>
+<nav aria-label="Sections">
+  <button data-tab="shows">Shows</button>
+  <button data-tab="day">Day total</button>
+  <button data-tab="week">Week</button>
+  <button data-tab="settings">Settings</button>
+</nav>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const isoOf = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const ymd = s => { const [y,m,d] = s.split('-').map(Number); return [y,m-1,d]; };
+const parseISO = s => new Date(...ymd(s));
+const addDays = (s,n) => { const d = parseISO(s); d.setDate(d.getDate()+n); return isoOf(d); };
+const dmy = (s,sep='/') => { const [y,m,d] = s.split('-'); return d+sep+m+sep+y; };
+const diffDays = (a,b) => Math.round((Date.UTC(...ymd(b)) - Date.UTC(...ymd(a))) / 864e5);
+const weekday = s => parseISO(s).toLocaleDateString('en-IN',{weekday:'long'});
+const ord = n => { const v = n%100; return n + (['th','st','nd','rd'][(v-20)%10] || ['th','st','nd','rd'][v] || 'th'); };
+const sum = a => a.reduce((x,y)=>x+y,0);
+const nf0 = new Intl.NumberFormat('en-IN',{maximumFractionDigits:0});
+const nf2 = new Intl.NumberFormat('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const f0 = n => nf0.format(n), f2 = n => nf2.format(n);
+const fc = c => Number.isInteger(c/100) ? f0(c/100) : f2(c/100);   // cents -> gross style
+const fc2 = c => f2(c/100);                                        // cents -> 2 decimals
+const cents = n => Math.round((+n||0)*100);
+function fmtTime(t){ if(!t) return ''; const [h,m] = t.split(':').map(Number); return pad(h%12||12)+':'+pad(m)+' '+(h>=12?'PM':'AM'); }
+
+/* ---------- state + storage (falls back to memory if storage is blocked) ---------- */
+const LS_KEY = 'rajaSabariShowCollection.v1';
+let memCopy = null;
+const DEFAULT_TIMES = ['10:30','14:00','18:15','22:15'];
+function defaultState(){
+  return {
+    info:{theatre:'Raja Sabari',station:'Gugai',area:'Salem',whatsapp:''},
+    movies:[{id:'m1',name:'OM',r1:150,r2:170,n1:116.46,n2:132.76,release:'2026-11-21'}],
+    movieId:'m1', lastTimes:DEFAULT_TIMES.slice(), days:{}
+  };
+}
+function loadState(){
+  let s=null;
+  try{ const raw = localStorage.getItem(LS_KEY); if(raw) s = JSON.parse(raw); }catch(e){}
+  if(!s && memCopy) s = memCopy;
+  const d = defaultState();
+  if(!s || !Array.isArray(s.movies) || !s.movies.length) return d;
+  s.info = Object.assign(d.info, s.info||{});
+  s.days = s.days || {};
+  s.lastTimes = s.lastTimes && s.lastTimes.length ? s.lastTimes : d.lastTimes;
+  if(!s.movies.find(m=>m.id===s.movieId)) s.movieId = s.movies[0].id;
+  return s;
+}
+const state = loadState();
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch(e){ memCopy = JSON.parse(JSON.stringify(state)); }
+}
+const ui = { tab:'shows', date:isoOf(new Date()), week:null };
+const movie = () => state.movies.find(m=>m.id===state.movieId) || state.movies[0];
+
+/* ---------- day data ---------- */
+const dayKey = iso => state.movieId+'|'+iso;
+function newDay(){
+  const m = movie();
+  return { r:{r1:m.r1,r2:m.r2,n1:m.n1,n2:m.n2}, shows: state.lastTimes.map(t=>({t,c1:'',c2:''})) };
+}
+const dayView  = iso => state.days[dayKey(iso)] || newDay();
+function ensureDay(iso){ const k = dayKey(iso); if(!state.days[k]) state.days[k] = newDay(); return state.days[k]; }
+
+function calcShow(r,s){
+  const c1 = Math.max(0,parseInt(s.c1)||0), c2 = Math.max(0,parseInt(s.c2)||0);
+  const v1C = cents(r.r1)*c1, v2C = cents(r.r2)*c2;
+  const netC = cents(r.n1)*c1 + cents(r.n2)*c2;
+  return { c1,c2,aud:c1+c2,v1C,v2C,grossC:v1C+v2C,netC,taxC:v1C+v2C-netC, ran: s.c1!=='' || s.c2!=='' };
+}
+function calcDay(d){
+  const t = {shows:0,aud:0,grossC:0,netC:0};
+  d.shows.forEach(s=>{ const k = calcShow(d.r,s); if(k.ran){ t.shows++; t.aud+=k.aud; t.grossC+=k.grossC; t.netC+=k.netC; } });
+  t.taxC = t.grossC - t.netC; return t;
+}
+function sumCalcs(list){
+  const t = {shows:0,aud:0,grossC:0,netC:0};
+  list.forEach(c=>{ if(c){ t.shows+=c.shows; t.aud+=c.aud; t.grossC+=c.grossC; t.netC+=c.netC; } });
+  t.taxC = t.grossC - t.netC; return t;
+}
+function sumDays(pred){
+  const list = [];
+  for(const k in state.days){ const [id,dt] = k.split('|'); if(id===state.movieId && pred(dt)) list.push(calcDay(state.days[k])); }
+  return sumCalcs(list);
+}
+function runDay(iso){ return diffDays(movie().release, iso)+1; }
+function weekNo(){ return ui.week ?? Math.max(1, Math.ceil(runDay(ui.date)/7)); }
+function weekRows(w){
+  const m = movie(), rows = [];
+  for(let k=0;k<7;k++){
+    const iso = addDays(m.release, 7*(w-1)+k), d = state.days[m.id+'|'+iso];
+    const c = d ? calcDay(d) : null;
+    rows.push({iso, c: c && c.shows ? c : null});
+  }
+  return rows;
+}
+const weekSum = w => sumCalcs(weekRows(w).map(r=>r.c));
+function weekList(w){ const s = w<=7 ? 1 : w-6; return Array.from({length:7},(_,i)=>s+i); }
+
+/* ---------- report text ---------- */
+const hdr = () => state.info.theatre.toUpperCase()+' THEATRE – SHOW COLLECTION';
+function showText(iso,i){
+  const m = movie(), d = dayView(iso), s = d.shows[i], k = calcShow(d.r,s), I = state.info;
+  return [hdr(),`Date: ${dmy(iso)}`,`Movie Name: ${m.name}`,`Theatre: ${I.theatre}`,`Station: ${I.station}`,`Area: ${I.area}`,
+    `Show Time: ${fmtTime(s.t)}`,'Rate:',`${d.r.r1} × ${k.c1} = ${fc(k.v1C)}`,`${d.r.r2} × ${k.c2} = ${fc(k.v2C)}`,
+    `Aud: ${k.aud}`,`Gross: ${fc(k.grossC)}`].join('\n');
+}
+function dayText(iso){
+  const m = movie(), c = calcDay(dayView(iso)), I = state.info;
+  return [`Date: ${dmy(iso,'.')}`,`Movie Name: ${m.name}`,`Theatre: ${I.theatre}`,`Station: ${I.station}`,`Area: ${I.area}`,
+    `Total ${c.shows} Shows`,`Audience: ${c.aud}`,`Gross: ${fc(c.grossC)}`,`Net: ${fc2(c.netC)}`].join('\n');
+}
+function weekText(w){
+  const m = movie(), I = state.info, rows = weekRows(w), t = sumCalcs(rows.map(r=>r.c));
+  const from = rows[0].iso, to = rows[6].iso;
+  const lines = rows.map((r,i)=> `${i+1}. ${dmy(r.iso)} – Aud ${r.c?r.c.aud:'-'}, Gross ${r.c?fc(r.c.grossC):'-'}, Tax ${r.c?fc2(r.c.taxC):'-'}, Nett ${r.c?fc2(r.c.netC):'-'}`);
+  return ['WEEKLY STATEMENT',`Picture: ${m.name}`,`Theatre: ${I.theatre}`,`Station: ${I.station}`,`Week: ${ord(w)} Week (${dmy(from)} to ${dmy(to)})`,'',
+    ...lines,'',`Total – Aud ${t.aud}, Gross ${fc(t.grossC)}, Tax ${fc2(t.taxC)}, Nett ${fc2(t.netC)}`].join('\n');
+}
+
+/* ---------- views ---------- */
+function runInfo(){
+  const n = runDay(ui.date), wd = weekday(ui.date);
+  return n>=1 ? `${wd} · Day ${n} · ${ord(Math.ceil(n/7))} week` : `${wd} · before this movie's release date`;
+}
+function dateBar(){
+  return `<div class="datebar"><button class="nav" id="prev" aria-label="Previous day">‹</button>
+    <input type="date" id="date" value="${ui.date}" aria-label="Date"><button class="nav" id="next" aria-label="Next day">›</button></div>
+    <p class="run">${esc(runInfo())}</p>`;
+}
+function viewShows(){
+  const d = dayView(ui.date), r = d.r, m = movie();
+  const tickets = d.shows.map((s,i)=>`
+  <section class="ticket" data-i="${i}">
+    <div class="thead"><span class="lab">Show ${i+1}</span><input type="time" class="t" value="${esc(s.t)}" aria-label="Show ${i+1} time">
+      <button class="x" data-act="rm" aria-label="Remove show ${i+1}">×</button></div>
+    <div class="perf"></div>
+    <div class="tbody">
+      <label class="rrow"><span class="rate">${esc(r.r1)} ×</span><input class="c1" inputmode="numeric" pattern="[0-9]*" placeholder="Aud" value="${esc(s.c1)}" aria-label="Audience at rate ${esc(r.r1)}"><span class="eq">= <b data-v1></b></span></label>
+      <label class="rrow"><span class="rate">${esc(r.r2)} ×</span><input class="c2" inputmode="numeric" pattern="[0-9]*" placeholder="Aud" value="${esc(s.c2)}" aria-label="Audience at rate ${esc(r.r2)}"><span class="eq">= <b data-v2></b></span></label>
+      <div class="tot"><span>Aud <b data-aud></b></span><span>Gross <b data-gross></b></span></div>
+      <div class="acts"><button class="btn ghost" data-act="copy">Copy</button><button class="btn wa" data-act="wa">WhatsApp</button></div>
+    </div>
+  </section>`).join('');
+  const stale = state.days[dayKey(ui.date)] && (r.r1!==m.r1||r.r2!==m.r2||r.n1!==m.n1||r.n2!==m.n2);
+  return dateBar() + tickets +
+    `<button class="btn ghost" id="addshow" style="width:100%">Add a show</button>` +
+    (stale ? `<div class="note">This day was saved with older rates (${r.r1} / ${r.r2}). <button class="btn ghost" id="applyrates" style="margin-top:8px;width:100%">Use current movie rates for this day</button></div>` : '') +
+    `<section class="card"><h2>Day so far</h2><div class="sum"><div><small>Shows</small><b data-s-shows></b></div><div><small>Aud</small><b data-s-aud></b></div><div><small>Gross</small><b data-s-gross></b></div><div><small>Net</small><b data-s-net></b></div></div>
+     <div class="acts"><button class="btn gold" data-go="day">Open day total</button></div></section>`;
+}
+function updateLive(){
+  const d = dayView(ui.date);
+  $$('.ticket').forEach(el=>{
+    const k = calcShow(d.r, d.shows[+el.dataset.i]);
+    el.querySelector('[data-v1]').textContent = fc(k.v1C);
+    el.querySelector('[data-v2]').textContent = fc(k.v2C);
+    el.querySelector('[data-aud]').textContent = k.aud;
+    el.querySelector('[data-gross]').textContent = fc(k.grossC);
+  });
+  const c = calcDay(d);
+  const set = (q,v)=>{ const e = $(q); if(e) e.textContent = v; };
+  set('[data-s-shows]',c.shows); set('[data-s-aud]',c.aud); set('[data-s-gross]',fc(c.grossC)); set('[data-s-net]',fc2(c.netC));
+}
+function viewDay(){
+  const d = dayView(ui.date), c = calcDay(d);
+  const rows = d.shows.map(s=>{ const k = calcShow(d.r,s); return k.ran ? `<tr><td>${fmtTime(s.t)}</td><td>${k.aud}</td><td>${fc(k.grossC)}</td><td>${fc2(k.netC)}</td></tr>` : ''; }).join('');
+  return dateBar() + `
+  <section class="card"><h2>Day total</h2>
+  ${c.shows ? `<div class="tblwrap"><table class="tbl"><thead><tr><th>Show</th><th>Aud</th><th>Gross</th><th>Net</th></tr></thead><tbody>${rows}</tbody>
+    <tfoot><tr><td>Total</td><td>${c.aud}</td><td>${fc(c.grossC)}</td><td>${fc2(c.netC)}</td></tr></tfoot></table></div>`
+    : `<p class="empty">No audience entered for this date yet. Add counts in Shows.</p>`}
+  </section>
+  <section class="card"><h2>Message for WhatsApp</h2><pre class="receipt">${esc(dayText(ui.date))}</pre>
+    <div class="acts"><button class="btn ghost" data-act="copy-day">Copy</button><button class="btn wa" data-act="wa-day">WhatsApp</button></div></section>
+  <section class="card"><h2>Daily collection report</h2><img class="preview" id="pv" alt="Daily collection report preview">
+    <div class="acts"><button class="btn" data-act="img-dcr">Download image</button><button class="btn wa" data-act="share-dcr">Share image</button></div></section>`;
+}
+function viewWeek(){
+  const m = movie(), w = weekNo(), rows = weekRows(w), t = sumCalcs(rows.map(r=>r.c));
+  const wl = weekList(w);
+  const wrows = wl.map(n=>{ const s = weekSum(n); return {n,s}; });
+  const wt = sumCalcs(wrows.map(x=>x.s.aud?x.s:null));
+  const cell = (c,fn)=> c ? fn(c) : '';
+  return `<div class="stepper"><button class="nav" id="wprev" aria-label="Previous week">‹</button><strong>${ord(w)} week</strong><button class="nav" id="wnext" aria-label="Next week">›</button></div>
+  <p class="run">${esc(m.name)} · ${dmy(rows[0].iso)} to ${dmy(rows[6].iso)}</p>
+  <section class="card"><h2>Days of the week</h2><div class="tblwrap"><table class="tbl"><thead><tr><th>Date</th><th>Aud</th><th>Gross</th><th>Tax</th><th>Nett</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${dmy(r.iso)}</td><td>${cell(r.c,c=>c.aud)}</td><td>${cell(r.c,c=>fc(c.grossC))}</td><td>${cell(r.c,c=>fc2(c.taxC))}</td><td>${cell(r.c,c=>fc2(c.netC))}</td></tr>`).join('')}
+  </tbody><tfoot><tr><td>Total</td><td>${t.aud}</td><td>${fc(t.grossC)}</td><td>${fc2(t.taxC)}</td><td>${fc2(t.netC)}</td></tr></tfoot></table></div></section>
+  <section class="card"><h2>All weeks</h2><div class="tblwrap"><table class="tbl"><thead><tr><th>Week</th><th>Aud</th><th>Gross</th><th>Tax</th><th>Nett</th></tr></thead><tbody>
+  ${wrows.map(x=>`<tr><td>${ord(x.n)} week</td><td>${x.s.aud||''}</td><td>${x.s.aud?fc(x.s.grossC):''}</td><td>${x.s.aud?fc2(x.s.taxC):''}</td><td>${x.s.aud?fc2(x.s.netC):''}</td></tr>`).join('')}
+  </tbody><tfoot><tr><td>Total</td><td>${wt.aud}</td><td>${fc(wt.grossC)}</td><td>${fc2(wt.taxC)}</td><td>${fc2(wt.netC)}</td></tr></tfoot></table></div></section>
+  <section class="card"><h2>Weekly statement</h2><img class="preview" id="pv" alt="Weekly statement preview">
+    <div class="acts"><button class="btn" data-act="img-wk">Download image</button><button class="btn wa" data-act="share-wk">Share image</button></div>
+    <div class="acts"><button class="btn ghost" data-act="copy-week">Copy as text</button><button class="btn wa" data-act="wa-week">WhatsApp text</button></div></section>`;
+}
+function viewSettings(){
+  const I = state.info;
+  const mv = state.movies.map(m=>`
+  <section class="card" data-mid="${m.id}">
+    <h2>${esc(m.name)}${m.id===state.movieId?' (selected)':''}</h2>
+    <label class="fld">Movie name<input data-f="name" value="${esc(m.name)}"></label>
+    <label class="fld">Release date (Day 1)<input type="date" data-f="release" value="${m.release}"></label>
+    <div class="pair"><span class="nm">Ticket 1</span><label class="fld">Rate<input data-f="r1" type="number" step="0.01" inputmode="decimal" value="${m.r1}"></label><label class="fld">Net rate<input data-f="n1" type="number" step="0.01" inputmode="decimal" value="${m.n1}"></label></div>
+    <div class="pair"><span class="nm">Ticket 2</span><label class="fld">Rate<input data-f="r2" type="number" step="0.01" inputmode="decimal" value="${m.r2}"></label><label class="fld">Net rate<input data-f="n2" type="number" step="0.01" inputmode="decimal" value="${m.n2}"></label></div>
+    <div class="acts"><button class="btn danger" data-act="del-movie" ${state.movies.length<2?'disabled':''}>Delete movie</button></div>
+  </section>`).join('');
+  return `<section class="card"><h2>Theatre</h2>
+    <label class="fld">Theatre name<input data-info="theatre" value="${esc(I.theatre)}"></label>
+    <label class="fld">Station<input data-info="station" value="${esc(I.station)}"></label>
+    <label class="fld">Area<input data-info="area" value="${esc(I.area)}"></label>
+    <label class="fld">WhatsApp number for sending reports (optional)<input data-info="whatsapp" inputmode="tel" placeholder="9876543210" value="${esc(I.whatsapp)}"></label>
+    <p class="empty">With a number saved, WhatsApp opens that chat with the report ready; you tap Send. Use Share image to pick a group.</p></section>
+  <h2 style="margin:18px 2px 0">Movies and rates</h2>
+  <p class="empty" style="margin:4px 2px">Changed rates apply to new days. Days already saved keep the rates they were entered with.</p>
+  ${mv}
+  <button class="btn gold" id="addmovie" style="width:100%">Add a movie</button>
+  <section class="card"><h2>Backup</h2><p class="empty">Data is saved in this browser. Download a backup before clearing browser data or changing phone.</p>
+    <div class="acts"><button class="btn ghost" data-act="export">Download backup</button><button class="btn ghost" data-act="import">Restore backup</button></div>
+    <input type="file" id="importFile" accept="application/json" hidden></section>`;
+}
+
+/* ---------- render ---------- */
+function renderHeader(){
+  const sel = $('#movieSel');
+  sel.innerHTML = state.movies.map(m=>`<option value="${m.id}" ${m.id===state.movieId?'selected':''}>${esc(m.name)}</option>`).join('');
+  $('#title').textContent = state.info.theatre+' Theatre';
+  $('#sub').textContent = 'Show collection – '+state.info.station+', '+state.info.area;
+  document.title = state.info.theatre+' Theatre – Show Collection';
+}
+function render(){
+  renderHeader();
+  $$('nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===ui.tab));
+  $('#view').innerHTML = ({shows:viewShows,day:viewDay,week:viewWeek,settings:viewSettings})[ui.tab]();
+  if(ui.tab==='shows') updateLive();
+  if(ui.tab==='day') setPreview(drawDCR(ui.date));
+  if(ui.tab==='week') setPreview(drawWeekly(weekNo()));
+}
+function go(tab){ ui.tab = tab; render(); window.scrollTo(0,0); }
+function setPreview(c){ const img = $('#pv'); if(img) img.src = c.toDataURL('image/png'); }
+
+/* ---------- canvas images ---------- */
+const FONT = 'Arial, Helvetica, sans-serif';
+function newCanvas(w,h){
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0,0,w,h);
+  g.fillStyle = '#000'; g.strokeStyle = '#000'; g.textBaseline = 'middle'; return {c,g};
+}
+function T(g,s,x,y,o={}){ g.font = `${o.b?'bold ':''}${o.s||24}px ${o.f||FONT}`; g.textAlign = o.a||'left'; g.fillStyle = '#000'; g.fillText(String(s),x,y); }
+function L(g,x1,y1,x2,y2,w=2){ g.lineWidth = w; g.beginPath(); g.moveTo(x1,y1); g.lineTo(x2,y2); g.stroke(); }
+function grid(g,x,y,cw,rh,lw=2){
+  const W = sum(cw), H = sum(rh);
+  for(let i=1;i<cw.length;i++){ const xx = x+sum(cw.slice(0,i)); L(g,xx,y,xx,y+H,lw); }
+  for(let j=1;j<rh.length;j++){ const yy = y+sum(rh.slice(0,j)); L(g,x,yy,x+W,yy,lw); }
+  g.lineWidth = lw*2; g.strokeRect(x,y,W,H);
+  return {x:cw.map((_,i)=>x+sum(cw.slice(0,i))), y:rh.map((_,j)=>y+sum(rh.slice(0,j))), cw, rh};
+}
+function put(g,t,r,c,v,o={}){
+  const a = o.a||'center', x = t.x[c], w = t.cw[c];
+  const px = a==='center' ? x+w/2 : a==='right' ? x+w-12 : x+12;
+  T(g,v,px,t.y[r]+t.rh[r]/2,{...o,a});
+}
+function drawDCR(iso){
+  const m = movie(), I = state.info, d = dayView(iso), n = d.shows.length, W = 1000, X = 20, CW = [260,300,400];
+  const blockH = 202, H = 225 + n*blockH + 70 + 170 + 158 + 40;
+  const {c,g} = newCanvas(W,H);
+  T(g,'DAILY COLLECTION REPORT',W/2,34,{b:1,s:30,a:'center'});
+  const field = (lab,val,lx,vx,ex,y)=>{ T(g,lab,lx,y,{s:24}); T(g,val,vx,y,{s:24,b:1}); L(g,vx-6,y+16,ex,y+16,1); };
+  const rd = runDay(iso);
+  field('Film Name',m.name,X,170,600,100); field('Theatre',I.theatre,X,170,600,140); field('Station',I.station+', '+I.area,X,170,600,180);
+  field('Date',dmy(iso),640,740,980,100); field('Day',weekday(iso),640,740,980,140); field('Days',rd>=1?rd:'',640,740,980,180);
+  let y = 225;
+  d.shows.forEach(s=>{
+    const k = calcShow(d.r,s);
+    T(g,'Time : '+fmtTime(s.t),X,y+18,{s:24,b:1}); T(g,'Weather :',380,y+18,{s:24});
+    y += 40;
+    const t = grid(g,X,y,CW,[38,36,36,38]);
+    put(g,t,0,0,'Rs',{b:1}); put(g,t,0,1,'Aud',{b:1}); put(g,t,0,2,'Gross',{b:1});
+    put(g,t,1,0,d.r.r1); put(g,t,1,1,k.ran?k.c1:''); put(g,t,1,2,k.ran?fc(k.v1C):'');
+    put(g,t,2,0,d.r.r2); put(g,t,2,1,k.ran?k.c2:''); put(g,t,2,2,k.ran?fc(k.v2C):'');
+    put(g,t,3,0,'Total',{b:1,a:'left'}); put(g,t,3,1,k.ran?k.aud:'',{b:1}); put(g,t,3,2,k.ran?fc(k.grossC):'',{b:1});
+    y += 148 + 14;
+  });
+  const day = calcDay(d);
+  const tg = grid(g,X,y,CW,[44]);
+  put(g,tg,0,0,'Total Gross',{b:1}); put(g,tg,0,1,day.aud,{b:1}); put(g,tg,0,2,fc(day.grossC),{b:1});
+  y += 70;
+  [[`( ${day.shows} ) Show Gross`,fc(day.grossC)],['Less (Tax)',fc2(day.taxC)],['Nett',fc2(day.netC)]].forEach(([a,b],i)=>{
+    T(g,a,X,y+i*44+20,{s:24}); T(g,b,560,y+i*44+20,{s:26,b:1,a:'right'}); L(g,300,y+i*44+36,570,y+i*44+36,1);
+  });
+  y += 140; T(g,'Representative',W-X,y,{s:24,a:'right'}); y += 30;
+  const prev = sumDays(dt=>dt<iso), today = day;
+  const tot = sumCalcs([prev,today]);
+  const t2 = grid(g,X,y,[200,160,240,160,200],[38,40,40,40]);
+  ['','Audience','Gross','Tax','Nett'].forEach((h,i)=>put(g,t2,0,i,h,{b:1}));
+  [['Previous day',prev],['Today',today],['TOTAL',tot]].forEach(([lab,v],r)=>{
+    put(g,t2,r+1,0,lab,{a:'left',b:r===2});
+    put(g,t2,r+1,1,v.aud,{b:r===2}); put(g,t2,r+1,2,fc(v.grossC),{b:r===2}); put(g,t2,r+1,3,fc2(v.taxC),{b:r===2}); put(g,t2,r+1,4,fc2(v.netC),{b:r===2});
+  });
+  return c;
+}
+function drawWeekly(w){
+  const m = movie(), I = state.info, rows = weekRows(w), W = 1000, H = 1414, X = 70;
+  const {c,g} = newCanvas(W,H);
+  T(g,'WEEKLY STATEMENT',W/2,70,{b:1,s:54,a:'center',f:'Georgia, "Times New Roman", serif'});
+  T(g,'PICTURE : '+m.name,X,128,{s:24}); T(g,'FROM : '+dmy(rows[0].iso),500,128,{s:24}); T(g,'TO : '+dmy(rows[6].iso),740,128,{s:24});
+  T(g,'THEATRE : '+I.theatre,X,192,{s:24}); T(g,'STATION : '+I.station,500,192,{s:24}); T(g,'WEEK : '+ord(w),740,192,{s:24});
+  const CW = [60,150,110,190,160,190], lw = 2;
+  const t = sumCalcs(rows.map(r=>r.c));
+  let t1 = grid(g,X,232,CW,[70,42,42,42,42,42,42,42,56],lw);
+  ['SN','DATE','AUDI','GROSS','TAX','NETT'].forEach((h,i)=>put(g,t1,0,i,h,{s:22}));
+  rows.forEach((r,i)=>{
+    put(g,t1,i+1,0,i+1,{s:22});
+    put(g,t1,i+1,1,dmy(r.iso),{s:20});
+    if(r.c){ put(g,t1,i+1,2,r.c.aud,{s:22}); put(g,t1,i+1,3,fc(r.c.grossC),{s:22}); put(g,t1,i+1,4,fc2(r.c.taxC),{s:22}); put(g,t1,i+1,5,fc2(r.c.netC),{s:22}); }
+  });
+  put(g,t1,8,1,'TOTAL',{s:22,b:1}); put(g,t1,8,2,t.aud,{s:22,b:1}); put(g,t1,8,3,fc(t.grossC),{s:22,b:1}); put(g,t1,8,4,fc2(t.taxC),{s:22,b:1}); put(g,t1,8,5,fc2(t.netC),{s:22,b:1});
+  const y2 = 232 + 70 + 42*7 + 56 + 60;
+  const wl = weekList(w), ws = wl.map(n=>weekSum(n)), wt = sumCalcs(ws.map(s=>s.aud?s:null));
+  const t2 = grid(g,X,y2,CW,[70,42,42,42,42,42,42,42,56],lw);
+  ['SN','WEEKS','AUD','GROSS','TAX','NETT'].forEach((h,i)=>put(g,t2,0,i,h,{s:22}));
+  wl.forEach((n,i)=>{
+    put(g,t2,i+1,0,i+1,{s:22}); put(g,t2,i+1,1,ord(n)+' WEEK',{s:18});
+    const s = ws[i]; if(s.aud){ put(g,t2,i+1,2,s.aud,{s:22}); put(g,t2,i+1,3,fc(s.grossC),{s:22}); put(g,t2,i+1,4,fc2(s.taxC),{s:22}); put(g,t2,i+1,5,fc2(s.netC),{s:22}); }
+  });
+  put(g,t2,8,1,'TOTAL',{s:22,b:1}); put(g,t2,8,2,wt.aud,{s:22,b:1}); put(g,t2,8,3,fc(wt.grossC),{s:22,b:1}); put(g,t2,8,4,fc2(wt.taxC),{s:22,b:1}); put(g,t2,8,5,fc2(wt.netC),{s:22,b:1});
+  T(g,'..Representative',W-X-90,y2+70+42*7+56+50,{s:24,a:'center'});
+  return c;
+}
+
+/* ---------- sharing ---------- */
+let toastTimer;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'),1800); }
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); }
+  catch(e){ const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try{ document.execCommand('copy'); }catch(_){} a.remove(); }
+  toast('Copied');
+}
+function openWA(t){
+  let n = (state.info.whatsapp||'').replace(/\D/g,''); if(n.length===10) n = '91'+n;
+  window.open('https://wa.me/'+n+'?text='+encodeURIComponent(t),'_blank');
+}
+function download(blob,name){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500);
+}
+const blobOf = c => new Promise(r=>c.toBlob(r,'image/png'));
+const safe = s => String(s).replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'') || 'movie';
+async function imageAction(kind,share){
+  const wk = kind==='wk';
+  const c = wk ? drawWeekly(weekNo()) : drawDCR(ui.date);
+  const name = wk ? `Weekly-${safe(movie().name)}-week${weekNo()}.png` : `DCR-${safe(movie().name)}-${ui.date}.png`;
+  const b = await blobOf(c);
+  if(share){
+    const file = new File([b],name,{type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file]}); return; }catch(e){ if(e.name==='AbortError') return; }
+    }
+    toast('Sharing not supported here. Image downloaded instead.');
+  }
+  download(b,name);
+}
+
+/* ---------- events ---------- */
+const view = $('#view');
+view.addEventListener('input', e=>{
+  const el = e.target, tk = el.closest('.ticket');
+  if(tk && (el.classList.contains('c1') || el.classList.contains('c2'))){
+    const v = el.value.replace(/\D/g,''); if(v!==el.value) el.value = v;
+    const s = ensureDay(ui.date).shows[+tk.dataset.i];
+    s[el.classList.contains('c1')?'c1':'c2'] = v==='' ? '' : parseInt(v,10);
+    save(); updateLive(); return;
+  }
+  if(tk && el.classList.contains('t')){
+    const d = ensureDay(ui.date); d.shows[+tk.dataset.i].t = el.value;
+    state.lastTimes = d.shows.map(s=>s.t); save(); return;
+  }
+  const card = el.closest('[data-mid]');
+  if(card && el.dataset.f){
+    const m = state.movies.find(x=>x.id===card.dataset.mid), f = el.dataset.f;
+    if(f==='name') m.name = el.value || 'Movie';
+    else if(f==='release'){ if(el.value) m.release = el.value; }
+    else m[f] = parseFloat(el.value) || 0;
+    save(); renderHeader(); return;
+  }
+  if(el.dataset.info){ state.info[el.dataset.info] = el.value; save(); renderHeader(); }
+});
+view.addEventListener('change', e=>{
+  const el = e.target;
+  if(el.id==='date' && el.value){ ui.date = el.value; ui.week = null; render(); }
+  if(el.id==='importFile' && el.files[0]){
+    const rd = new FileReader();
+    rd.onload = ()=>{
+      try{
+        const s = JSON.parse(rd.result);
+        if(!Array.isArray(s.movies) || !s.movies.length) throw 0;
+        Object.keys(state).forEach(k=>delete state[k]); Object.assign(state,s);
+        const d = defaultState(); state.info = Object.assign(d.info,state.info||{}); state.days = state.days||{};
+        state.lastTimes = state.lastTimes||d.lastTimes; if(!state.movies.find(m=>m.id===state.movieId)) state.movieId = state.movies[0].id;
+        save(); render(); toast('Backup restored');
+      }catch(_){ toast('That file is not a valid backup'); }
+    };
+    rd.readAsText(el.files[0]);
+  }
+});
+view.addEventListener('click', async e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const tk = b.closest('.ticket');
+  if(b.id==='prev'||b.id==='next'){ ui.date = addDays(ui.date, b.id==='next'?1:-1); ui.week = null; return render(); }
+  if(b.id==='wprev'){ ui.week = Math.max(1,weekNo()-1); return render(); }
+  if(b.id==='wnext'){ ui.week = weekNo()+1; return render(); }
+  if(b.id==='addshow'){ const d = ensureDay(ui.date); const last = d.shows[d.shows.length-1]; d.shows.push({t:last?last.t:'12:00',c1:'',c2:''}); state.lastTimes = d.shows.map(s=>s.t); save(); return render(); }
+  if(b.id==='applyrates'){ const m = movie(); ensureDay(ui.date).r = {r1:m.r1,r2:m.r2,n1:m.n1,n2:m.n2}; save(); return render(); }
+  if(b.id==='addmovie'){
+    const m = movie(), id = 'm'+Date.now();
+    state.movies.push({id,name:'New movie',r1:m.r1,r2:m.r2,n1:m.n1,n2:m.n2,release:ui.date});
+    state.movieId = id; ui.week = null; save(); return render();
+  }
+  if(b.dataset.go) return go(b.dataset.go);
+  const act = b.dataset.act; if(!act) return;
+  if(act==='rm' && tk){ const d = ensureDay(ui.date); if(d.shows.length>1){ d.shows.splice(+tk.dataset.i,1); state.lastTimes = d.shows.map(s=>s.t); save(); render(); } else toast('Keep at least one show'); }
+  else if(act==='copy' && tk) copyText(showText(ui.date,+tk.dataset.i));
+  else if(act==='wa' && tk) openWA(showText(ui.date,+tk.dataset.i));
+  else if(act==='copy-day') copyText(dayText(ui.date));
+  else if(act==='wa-day') openWA(dayText(ui.date));
+  else if(act==='copy-week') copyText(weekText(weekNo()));
+  else if(act==='wa-week') openWA(weekText(weekNo()));
+  else if(act==='img-dcr') imageAction('dcr',false);
+  else if(act==='share-dcr') imageAction('dcr',true);
+  else if(act==='img-wk') imageAction('wk',false);
+  else if(act==='share-wk') imageAction('wk',true);
+  else if(act==='del-movie'){
+    const card = b.closest('[data-mid]'), id = card.dataset.mid, m = state.movies.find(x=>x.id===id);
+    if(state.movies.length>1 && confirm(`Delete "${m.name}" and all its saved days?`)){
+      state.movies = state.movies.filter(x=>x.id!==id);
+      Object.keys(state.days).forEach(k=>{ if(k.startsWith(id+'|')) delete state.days[k]; });
+      if(state.movieId===id) state.movieId = state.movies[0].id;
+      save(); render();
+    }
+  }
+  else if(act==='export') download(new Blob([JSON.stringify(state,null,1)],{type:'application/json'}),'show-collection-backup-'+isoOf(new Date())+'.json');
+  else if(act==='import') $('#importFile').click();
+});
+$('#movieSel').addEventListener('change', e=>{ state.movieId = e.target.value; ui.week = null; save(); render(); });
+$$('nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.tab)));
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(render);
+render();
+</script>
+</body>
+</html>
